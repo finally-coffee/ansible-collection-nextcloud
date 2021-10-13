@@ -1,0 +1,15 @@
+[Unit]
+Description=Nextcloud cron.php job
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory={{ nextcloud_basepath }}
+SyslogIdentifier={{ nextcloud_user }}
+
+ExecStart=/usr/bin/docker exec -t --user={{ nextcloud_user_info.uid }} {{ nextcloud_container_name }} /usr/local/bin/php -f /var/www/html/cron.php
+
+[Install]
+WantedBy=multi-user.target

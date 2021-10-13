@@ -1,0 +1,24 @@
+---
+
+nextcloud_container_volumes: "{{ nextcloud_container_base_volumes + nextcloud_container_extra_volumes }}"
+nextcloud_container_env: "{{ nextcloud_container_base_environment | combine(nextcloud_container_extra_environment) }}"
+
+nextcloud_container_base_labels:
+  version: "{{ nextcloud_version }}"
+nextcloud_container_labels: "{{ nextcloud_container_base_labels | combine(nextcloud_container_extra_labels) }}"
+
+nextcloud_container_base_environment: "{{ nextcloud_container_base_environment_yaml | from_yaml }}"
+nextcloud_container_base_environment_yaml: |+2
+  {% if nextcloud_database_type == 'postgres' %}
+  POSTGRES_DB: "{{ nextcloud_database_name }}"
+  POSTGRES_USER: "{{ nextcloud_database_user }}"
+  POSTGRES_PASSWORD: "{{ nextcloud_database_pass }}"
+  POSTGRES_HOST: "{{ nextcloud_database_host }}"
+  {% elif nextcloud_database_type in ['mysql', 'mariadb'] %}
+  MYSQL_DATABASE: "{{ nextcloud_database_name }}"
+  MYSQL_USER: "{{ nextcloud_database_user }}"
+  MYSQL_PASSWORD: "{{ nextcloud_database_pass }}"
+  MYSQL_HOST: "{{ nextcloud_database_host }}"
+  {% elif nextcloud_database_type == 'sqlite' %}
+  SQLITE_DATABASE: "{{ nextcloud_database_name }}"
+  {% endif %}

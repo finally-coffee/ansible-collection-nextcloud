@@ -1,0 +1,58 @@
+---
+
+nextcloud_version: 22.2.0
+nextcloud_user: nextcloud
+nextcloud_basepath: /opt/nextcloud
+nextcloud_config_path: "{{ nextcloud_basepath }}/config"
+# Where data from nextcloud like apps etc are persisted
+nextcloud_data_path: "{{ nextcloud_basepath }}/data"
+# Where user data like media, documents etc are persisted
+nextcloud_storage_path: "{{ nextcloud_basepath }}/storage"
+nextcloud_fpm_config_path: "{{ nextcloud_basepath }}/fpm-config"
+
+nextcloud_database_type: sqlite
+nextcloud_database_name: nextcloud
+nextcloud_database_user: nextcloud
+nextcloud_database_pass: ~
+nextcloud_database_host: localhost
+
+nextcloud_container_name: nextcloud
+nextcloud_container_image: docker.io/library/nextcloud
+nextcloud_container_image_variant: "-fpm-alpine"
+nextcloud_container_image_ref: "{{ nextcloud_container_name }}:{{ nextcloud_version }}{{ nextcloud_container_image_variant }}"
+nextcloud_container_image_force_source: false
+nextcloud_container_restart_policy: "unless-stopped"
+
+# in defaults so it can be unset if needed
+nextcloud_container_base_volumes:
+  - "{{ nextcloud_config_path }}:/var/www/html/config:z"
+  - "{{ nextcloud_storage_path }}:/var/www/html/data:z"
+  - "{{ nextcloud_data_path }}:/var/www/html:z"
+  - "{{ nextcloud_fpm_config_path }}/opcache.ini:/usr/local/etc/php/conf.d/opcache-recommended.ini:z"
+  - "{{ nextcloud_fpm_config_path }}/fpm.ini:/usr/local/etc/php-fpm.d/www.conf:z"
+  - "{{ nextcloud_basepath }}/nextcloud-passwd:/etc/passwd:z"
+  - "{{ nextcloud_basepath }}/nextcloud-group:/etc/group:z"
+nextcloud_container_extra_volumes: []
+nextcloud_container_extra_labels: {}
+nextcloud_container_extra_environment: {}
+
+nextcloud_container_networks: ~
+nextcloud_container_purge_other_networks: true
+
+nextcloud_paths:
+  - path: "{{ nextcloud_config_path }}"
+    mode: "0755"
+    owner: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
+    group: "root"
+  - path: "{{ nextcloud_data_path }}"
+    mode: "0755"
+    owner: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
+    group: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
+  - path: "{{ nextcloud_fpm_config_path }}"
+    mode: "0750"
+    owner: root
+    group: root
+  - path: "{{ nextcloud_storage_path }}"
+    mode: "0770"
+    owner: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
+    group: "root"

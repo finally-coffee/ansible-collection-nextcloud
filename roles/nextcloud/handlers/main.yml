@@ -1,0 +1,13 @@
+---
+
+- name: reload-systemd
+  systemd:
+    daemon_reload: yes
+
+- name: reload-nextcloud
+  docker_container:
+    name: "{{ nextcloud_container_name }}"
+    state: started
+    restart: yes
+    force_kill: yes
+    kill_signal: HUP

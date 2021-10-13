@@ -1,0 +1,109 @@
+---
+
+- name: Create nextcloud user
+  user:
+    name: "{{ nextcloud_user }}"
+    state: present
+    system: yes
+  register: nextcloud_user_info
+
+- name: Ensure nextcloud directories exist and have correct permissions
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  loop: "{{ nextcloud_paths }}"
+
+- name: Ensure docker container for nextcloud is pulled
+  docker_image:
+    name: "{{ nextcloud_container_image_ref }}"
+    state: present
+    source: pull
+    force_source: "{{ nextcloud_container_image_force_source }}"
+
+- name: Template OpCache configuration
+  template:
+    src: nextcloud-fpm-opcache.ini.j2
+    dest: "{{ nextcloud_fpm_config_path }}/opcache.ini"
+    mode: "0640"
+    owner: "root"
+    group: "root"
+  notify:
+    - reload-nextcloud
+
+- name: Template PHP FPM configuration
+  template:
+    src: nextcloud-fpm.ini.j2
+    dest: "{{ nextcloud_fpm_config_path }}/fpm.ini"
+    mode: "0640"
+    owner: "root"
+    group: "root"
+  notify:
+    - reload-nextcloud
+
+- name: Template modified /etc/passwd for nextcloud container
+  template:
+    src: nextcloud-passwd.j2
+    dest: "{{ nextcloud_basepath }}/nextcloud-passwd"
+    mode: "0640"
+    owner: "root"
+    group: "root"
+  notify:
+    - reload-nextcloud
+
+- name: Template modified /etc/passwd for nextcloud container
+  template:
+    src: nextcloud-group.j2
+    dest: "{{ nextcloud_basepath }}/nextcloud-group"
+    mode: "0640"
+    owner: "root"
+    group: "root"
+  notify:
+    - reload-nextcloud
+
+- name: Template systemd service for nextcloud's cron job
+  template:
+    src: systemd-nextcloud-cron.service.j2
+    dest: /etc/systemd/system/nextcloud-cron.service
+    mode: "0640"
+    owner: root
+    group: root
+  notify:
+    - reload-systemd
+
+- name: Template timer for nextcloud's cron job
+  template:
+    src: systemd-nextcloud-cron.timer.j2
+    dest: /etc/systemd/system/nextcloud-cron.timer
+    mode: "0640"
+    owner: root
+    group: root
+  notify:
+    - reload-systemd
+
+- meta: flush_handlers
+
+- name: Enable systemd timer for nextcloud cron
+  systemd:
+    name: "nextcloud-cron.timer"
+    enabled: yes
+
+- name: Ensure systemd timer for nextcloud cron is started
+  systemd:
+    name: "nextcloud-cron.timer"
+    state: started
+
+
+- name: Ensure docker container for nextcloud is running
+  docker_container:
+    name: "{{ nextcloud_container_name }}"
+    image: "{{ nextcloud_container_image_ref }}"
+    volumes: "{{ nextcloud_container_volumes }}"
+    labels: "{{ nextcloud_container_labels }}"
+    env: "{{ nextcloud_container_env }}"
+    networks: "{{ nextcloud_container_networks | default(omit, true) }}"
+    purge_networks: "{{ nextcloud_container_purge_other_networks }}"
+    restart_policy: "{{ nextcloud_container_restart_policy }}"
+    state: started

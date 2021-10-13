@@ -1,0 +1,14 @@
+opcache.enable=1
+opcache.interned_strings_buffer=32
+; next prime in the set which is suitable for large installations
+; default for this setting is 10000 which picks the prime 7963,
+; but default installation of nextcloud has already ~9k php files
+; see https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.max-accelerated-files
+opcache.max_accelerated_files=32531
+opcache.memory_consumption=256
+; deconstructor optimizations
+opcache.fast_shutdown=1
+;opcache.save_comments=1
+; not used if validate_timestamps=0
+;opcache.revalidate_freq=1
+opcache.validate_timestamps=0
