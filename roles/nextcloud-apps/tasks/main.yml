@@ -1,0 +1,50 @@
+---
+
+- name: Ensure nextcloud user is created
+  user:
+    name: "{{ nextcloud_run_user }}"
+    state: present
+  register: nextcloud_user_res
+  when: false
+
+- name: Install apps using php occ
+  community.docker.docker_container_exec:
+    container: "{{ nextcloud_container_name }}"
+    command: "php occ app:{{ verb }} {{ item.name }}"
+    user: "{{ nextcloud_run_user }}"
+    tty: yes
+  register: app_install_res
+  failed_when: "app_install_res.rc == 1 and 'already installed' not in app_install_res.stdout"
+  changed_when: "'already installed' not in app_install_res.stdout"
+  vars:
+    verb: >-
+      {%- if item.state|default('present') == 'present' -%}
+      install
+      {%- elif item.state == 'latest' -%}
+      update
+      {%- elif item.state == 'absent' -%}
+      remove
+      {%- endif -%}
+  loop: "{{ nextcloud_apps }}"
+  notify:
+    - restart-nextcloud
+
+- name: Ensure apps are enabled/disabled
+  community.docker.docker_container_exec:
+    container: "{{ nextcloud_container_name }}"
+    command: "php occ app:{{ verb }} {{ item.name }}"
+    user: "{{ nextcloud_run_user }}"
+    tty: yes
+  register: app_status_res
+  failed_when: "app_status_res.rc == 1 and 'No such app enabled' not in app_status_res.stdout"
+  changed_when: "'already enabled' not in app_status_res.stdout and 'No such app enabled' not in app_status_res.stdout"
+  vars:
+    verb: >-
+      {%- if item.state|default('present') in ['latest', 'present'] and item.enabled|default(True) -%}
+      enable
+      {%- elif item.enabled == False -%}
+      disable
+      {%- endif -%}
+  loop: "{{ nextcloud_apps }}"
+  notify:
+    - restart-nextcloud
