@@ -1,0 +1,13 @@
+namespace: finallycoffee
+name: nextcloud
+version: 0.1.0
+readme: README.md
+authors:
+- Johanna Dorothea Reichmann <transcaffeine@finallycoffee.eu>
+description: Installing and configuring nextcloud (and related apps/services) using docker
+license:
+- CNPLv7+
+build_ignore:
+- '*.tar.gz'
+repository: https://git.finallycoffee.eu/finallycoffee.eu/nextcloud
+issues: https://git.finallycoffee.eu/finallycoffee.eu/nextcloud/issues
