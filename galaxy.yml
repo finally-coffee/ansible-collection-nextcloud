@@ -5,6 +5,8 @@ readme: README.md
 authors:
 - Johanna Dorothea Reichmann <transcaffeine@finallycoffee.eu>
 description: Installing and configuring nextcloud (and related apps/services) using docker
+dependencies:
+  "community.docker": "^1.10.0"
 license:
 - CNPLv7+
 build_ignore:

@@ -1,0 +1,49 @@
+---
+
+- name: Check if configuration with given config ID already exists
+  docker_container_exec:
+    container: "{{ nc_ldap_container }}"
+    command: "{{ nc_ldap_occ_command }} ldap:show-config --output json {{ '--show-password' if nc_ldap_config_agent_password else '' }} {{ nc_ldap_config_id }}"
+    user: "{{ nc_ldap_occ_user }}"
+    tty: yes
+  changed_when: false
+  check_mode: false
+  register: nc_ldap_existing_config_occ
+
+- name: Create ldap configuration with id={{ nc_ldap_config_id }}
+  docker_container_exec:
+    container: "{{ nc_ldap_container }}"
+    command: "{{ nc_ldap_occ_command }} ldap:create-empty-config --output json {{ nc_ldap_config_id }}"
+    user: "{{ nc_ldap_occ_user }}"
+    tty: yes
+  when: nc_ldap_existing_config_occ.rc != 0 and nc_ldap_config_id not in (nc_ldap_existing_config_occ.stdout | from_json).keys()
+
+- name: Parse output of query command to dict
+  set_fact:
+    nc_ldap_existing_config: "{{ nc_ldap_existing_config_occ.stdout | from_json }}"
+  changed_when: false
+
+- name: Create changeset
+  set_fact:
+    nc_ldap_config_changeset: "{{ nc_ldap_config_changeset | combine(changed_entry) }}"
+  vars:
+    changed_entry: "{{ { item : nc_ldap_config_keys[item] } }}"
+  loop: "{{ nc_ldap_config_keys.keys() }}"
+  when: nc_ldap_config_keys[item] is defined and nc_ldap_config_keys[item] and nc_ldap_config_keys[item] != nc_ldap_existing_config[nc_ldap_config_id][item]
+
+- name: Ensure ldap configuration is in sync
+  docker_container_exec:
+    container: "{{ nc_ldap_container }}"
+    command: "{{ nc_ldap_occ_command }} ldap:set-config \"{{ nc_ldap_config_id }}\" \"{{ item.key }}\" \"{{ item.value }}\""
+    user: "{{ nc_ldap_occ_user }}"
+    tty: yes
+  loop: "{{ nc_ldap_config_changeset | dict2items }}"
+
+- name: Ensure ldap configuration is working
+  docker_container_exec:
+    container: "{{ nc_ldap_container }}"
+    command: "{{ nc_ldap_occ_command }} ldap:test-config {{ nc_ldap_config_id }}"
+    user: "{{ nc_ldap_occ_user }}"
+    tty: yes
+  changed_when: false
+  when: nc_ldap_test_configuration

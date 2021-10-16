@@ -1,0 +1,10 @@
+---
+
+- name: Load config {{ nc_ldap_config_id }} (and create if not exists) when running mode is http
+  include_tasks: load_config_http.yml
+  when: nc_ldap_api_method == 'http'
+
+- name: Load config {{ nc_ldap_config_id }} (and create if not exists) when running mode is occ
+  include_tasks: load_config_occ.yml
+  when: nc_ldap_api_method == 'occ'
+

@@ -1,0 +1,67 @@
+---
+
+nc_ldap_api_method: occ
+nc_ldap_test_configuration: true
+
+nc_ldap_api_instance_url: http://localhost
+nc_ldap_api_basic_auth_user:
+nc_ldap_api_basic_auth_password:
+
+nc_ldap_occ_command: "php occ"
+nc_ldap_occ_user: "nextcloud"
+nc_ldap_container: nextcloud
+
+nc_ldap_config_id: s01
+nc_ldap_config_host: 127.0.0.1
+nc_ldap_config_port: 389
+nc_ldap_config_backup_host: ~
+nc_ldap_config_backup_port: ~
+
+nc_ldap_config_base_dn:
+nc_ldap_config_base_dn_users:
+nc_ldap_config_base_dn_groups:
+nc_ldap_config_agent_name:
+nc_ldap_config_agent_password:
+
+nc_ldap_config_override_main_server: ~
+nc_ldap_config_tls: ~
+nc_ldap_config_turn_off_cert_check: ~
+nc_ldap_config_user_displayname: ~
+nc_ldap_config_user_displayname2: ~
+nc_ldap_config_user_avatar_rule: ~
+nc_ldap_config_gid_number: ~
+nc_ldap_config_user_filter_objectclass: ~
+nc_ldap_config_user_filter_groups: ~
+nc_ldap_config_user_filter: ~
+nc_ldap_config_user_filter_mode: ~
+nc_ldap_config_attributes_for_user_search: ~
+nc_ldap_config_group_filter: ~
+nc_ldap_config_group_filter_mode: ~
+nc_ldap_config_group_filter_objectclass: ~
+nc_ldap_config_group_filter_groups: ~
+nc_ldap_config_group_member_assoc_attr: ~
+nc_ldap_config_group_displayname: ~
+nc_ldap_config_attributes_for_group_search: ~
+nc_ldap_config_login_filter: ~
+nc_ldap_config_login_filter_mode: ~
+nc_ldap_config_login_filter_email: ~
+nc_ldap_config_login_filter_username: ~
+nc_ldap_config_login_filter_attributes: ~
+nc_ldap_config_quota_attribute: ~
+nc_ldap_config_quota_default: ~
+nc_ldap_config_email_attribute: ~
+nc_ldap_config_cache_ttl: ~
+nc_ldap_config_configuration_active: ~
+nc_ldap_config_experienced_admin: ~
+nc_ldap_config_home_folder_naming_rule: ~
+nc_ldap_config_use_memberOf_to_detect_membership: ~
+nc_ldap_config_expert_username_attr: ~
+nc_ldap_config_expert_uuid_user_attr: ~
+nc_ldap_config_expert_uuid_group_attr: ~
+nc_ldap_config_nested_groups: ~
+nc_ldap_config_paging_size: ~
+nc_ldap_config_turn_on_password_change: ~
+nc_ldap_config_dynamic_group_member_url: ~
+nc_ldap_config_default_ppolicy_dn: ~
+
+nc_ldap_meta_http_agent: "ansible-httpget/finallycoffee.nextcloud.ldap-user-backend"

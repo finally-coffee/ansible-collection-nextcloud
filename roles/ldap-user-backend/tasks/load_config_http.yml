@@ -1,0 +1,49 @@
+---
+
+- name: Set default api parameters for HTTP
+  meta: noop
+  vars: &api_defaults
+    http_agent: "{{ nc_ldap_meta_http_agent }}"
+    headers: "{{ nc_ldap_api_headers }}"
+    url_username: "{{ nc_ldap_api_basic_auth_user }}"
+    url_password: "{{ nc_ldap_api_basic_auth_password }}"
+    force_basic_auth: yes
+    force: yes
+
+- name: Check if configuration with given config ID already exists
+  uri:
+    <<: *api_defaults
+    url: "{{ nc_ldap_api_path }}/{{ nc_ldap_config_id }}{{ query_params }}"
+    method: GET
+  vars:
+    query_params: "?showPassword={{ '1' if nc_ldap_config_agent_password else '0' }}&format={{nc_ldap_api_parameter_format }}"
+  register: nc_ldap_existing_config_api
+
+# TODO: Can we force an ID on POST?
+- name: Create ldap configuration with id={{ nc_ldap_config_id }}
+  uri:
+    <<: *api_defaults
+    url: "{{ nc_ldap_api_path }}"
+    method: POST
+  when: nc_ldap_existing_config_api.status != 200
+
+- name: Parse output of query command to dict
+  set_fact:
+    nc_ldap_existing_config: "{{ nc_ldap_existing_config_api.stdout | from_json }}"
+  changed_when: false
+
+- name: Create changeset
+  set_fact:
+    nc_ldap_config_changeset: "{{ nc_ldap_config_changeset | combine(changed_entry) }}"
+  vars:
+    changed_entry: "{{ { item : nc_ldap_config_keys[item] } }}"
+  loop: "{{ nc_ldap_config_keys.keys() }}"
+  when: nc_ldap_config_keys[item] is defined and nc_ldap_config_keys[item] and nc_ldap_config_keys[item] != nc_ldap_existing_config[nc_ldap_config_id][item]
+
+- name: Ensure ldap configuration is in sync (http)
+  uri:
+    <<: *api_defaults
+    url: "{{ nc_lap_api_path }}/{{ nc_ldap_config_id }}"
+    method: PUT
+    body: "{{ { 'configData': nc_ldap_config_changeset } }}"
+    body_format: "form-urlencoded"

@@ -13,6 +13,8 @@ and managing nextcloud installations
 - [`roles/apps`](roles/apps/README.md):
   For managing nextcloud apps in an already installed nextcloud
   server instance. Can install, remove, enable/disable and update apps.
+- [`roles/ldap-user-backend`](roles/ldap-user-backend/README.md):
+  Manages LDAP authentication sources in installed nextcloud instances.
 
 ## License
 
