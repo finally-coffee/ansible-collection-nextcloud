@@ -22,3 +22,5 @@ nextcloud_container_base_environment_yaml: |+2
   {% elif nextcloud_database_type == 'sqlite' %}
   SQLITE_DATABASE: "{{ nextcloud_database_name }}"
   {% endif %}
+
+nextcloud_occ_command: "php occ"

@@ -70,6 +70,7 @@
     mode: "0640"
     owner: root
     group: root
+  when: nextcloud_background_job_mode == 'cron'
   notify:
     - reload-systemd
 
@@ -80,21 +81,11 @@
     mode: "0640"
     owner: root
     group: root
+  when: nextcloud_background_job_mode == 'cron'
   notify:
     - reload-systemd
 
 - meta: flush_handlers
-
-- name: Enable systemd timer for nextcloud cron
-  systemd:
-    name: "nextcloud-cron.timer"
-    enabled: yes
-
-- name: Ensure systemd timer for nextcloud cron is started
-  systemd:
-    name: "nextcloud-cron.timer"
-    state: started
-
 
 - name: Ensure docker container for nextcloud is running
   docker_container:
@@ -107,3 +98,35 @@
     purge_networks: "{{ nextcloud_container_purge_other_networks }}"
     restart_policy: "{{ nextcloud_container_restart_policy }}"
     state: started
+
+- name: Enable systemd timer for nextcloud cron
+  systemd:
+    name: "nextcloud-cron.timer"
+    enabled: yes
+  when: nextcloud_background_job_mode == 'cron'
+
+- name: Ensure systemd timer for nextcloud cron is started
+  systemd:
+    name: "nextcloud-cron.timer"
+    state: started
+  when: nextcloud_background_job_mode == 'cron'
+
+- name: Check nextcloud background job mode
+  community.docker.docker_container_exec:
+    container: "{{ nextcloud_container_name }}"
+    command: "{{ nextcloud_occ_command }} config:app:get core backgroundjobs_mode"
+    user: "{{ nextcloud_user_info.uid }}"
+    tty: yes
+  register: nextcloud_current_backgroundjob_mode
+  # As nextcloud might still be starting, retry this task
+  retries: 5
+  delay: 5
+  changed_when: false
+
+- name: Set nextcloud background job mode to {{ nextcloud_background_job_mode }}
+  community.docker.docker_container_exec:
+    container: "{{ nextcloud_container_name }}"
+    command: "{{ nextcloud_occ_command }} config:app:set core backgroundjobs_mode {{ nextcloud_background_job_mode }}"
+    user: "{{ nextcloud_user_info.uid }}"
+    tty: yes
+  when: nextcloud_current_backgroundjob_mode.stdout != nextcloud_background_job_mode

@@ -10,6 +10,8 @@ nextcloud_data_path: "{{ nextcloud_basepath }}/data"
 nextcloud_storage_path: "{{ nextcloud_basepath }}/storage"
 nextcloud_fpm_config_path: "{{ nextcloud_basepath }}/fpm-config"
 
+nextcloud_background_job_mode: cron
+
 nextcloud_database_type: sqlite
 nextcloud_database_name: nextcloud
 nextcloud_database_user: nextcloud
