@@ -58,3 +58,19 @@ nextcloud_paths:
     mode: "0770"
     owner: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
     group: "root"
+
+# PHP OpCache tuning
+nextcloud_opcache_enable: 1
+nextcloud_opcache_interned_strings_buffer_mb: 32
+nextcloud_opcache_max_accelerated_files: 32531
+nextcloud_opcache_memory_consumption_mb: 256
+nextcloud_opcache_fast_shutdown: 1
+nextcloud_opcache_save_comments: 1
+nextcloud_opcache_revalidate_freq: 1
+nextcloud_opcache_validate_timestamps: 0
+
+# FPM config
+nextcloud_fpm_max_children: 64
+nextcloud_fpm_start_servers: "{{ nextcloud_fpm_max_children / 2 | int }}"
+nextcloud_fpm_min_spare_servers: "{{ nextcloud_fpm_max_children / 4 | int }}"
+nextcloud_fpm_max_spare_servers: "{{ nextcloud_fpm_max_children * 3/4 | int }}"
