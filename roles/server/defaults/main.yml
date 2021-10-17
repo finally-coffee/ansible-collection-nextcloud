@@ -74,3 +74,6 @@ nextcloud_fpm_max_children: 64
 nextcloud_fpm_start_servers: "{{ nextcloud_fpm_max_children / 2 | int }}"
 nextcloud_fpm_min_spare_servers: "{{ nextcloud_fpm_max_children / 4 | int }}"
 nextcloud_fpm_max_spare_servers: "{{ nextcloud_fpm_max_children * 3/4 | int }}"
+
+nextcloud_php_memory_limit: 1024M
+nextcloud_php_upload_limit: 1024M

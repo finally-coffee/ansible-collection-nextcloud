@@ -22,5 +22,7 @@ nextcloud_container_base_environment_yaml: |+2
   {% elif nextcloud_database_type == 'sqlite' %}
   SQLITE_DATABASE: "{{ nextcloud_database_name }}"
   {% endif %}
+  PHP_MEMORY_LIMIT: "{{ nextcloud_php_memory_limit }}"
+  PHP_UPLOAD_LIMIT: "{{ nextcloud_php_upload_limit }}"
 
 nextcloud_occ_command: "php occ"
