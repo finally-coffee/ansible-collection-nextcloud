@@ -130,3 +130,20 @@
     user: "{{ nextcloud_user_info.uid }}"
     tty: yes
   when: nextcloud_current_backgroundjob_mode.stdout != nextcloud_background_job_mode
+
+- name: Check nextcloud database host
+  community.docker.docker_container_exec:
+    container: "{{ nextcloud_container_name }}"
+    command: "{{ nextcloud_occ_command }} config:system:get dbhost"
+    user: "{{ nextcloud_user_info.uid }}"
+    tty: yes
+  register: nextcloud_current_dbhost
+
+- name: Set nextcloud database host mode to {{ nextcloud_database_host }}
+  community.docker.docker_container_exec:
+    container: "{{ nextcloud_container_name }}"
+    command: "{{ nextcloud_occ_command }} config:system:set dbhost --value={{ nextcloud_database_host }} --update-only -n"
+    user: "{{ nextcloud_user_info.uid }}"
+    tty: yes
+  when: nextcloud_current_dbhost.stdout != nextcloud_database_host
+  notify: restart-nextcloud
