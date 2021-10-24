@@ -25,18 +25,24 @@ nextcloud_container_base_environment_yaml: |+2
   PHP_MEMORY_LIMIT: "{{ nextcloud_php_memory_limit }}"
   PHP_UPLOAD_LIMIT: "{{ nextcloud_php_upload_limit }}"
 
-nextcloud_config: "{{ nextcloud_base_config | combine(nextcloud_extra_config|default({}), recursive=True, list_merge='append') }}"
-nextcloud_base_config:
+nextcloud_config: "{{ nextcloud_base_config | from_yaml | combine(nextcloud_extra_config|default({}), recursive=True, list_merge='append') }}"
+nextcloud_base_config: |+2
+  {% if nextcloud_database_type != 'sqlite' %}
   system:
-    # TODO: needs to have conditions as f.ex. sqlite doesn't have a user
     dbhost: "{{ nextcloud_database_host }}"
     dbuser: "{{ nextcloud_database_user }}"
     dbpassword: "{{ nextcloud_database_pass }}"
     dbname: "{{ nextcloud_database_name }}"
-    #dbtype: "{{ nextcloud_db_types[nextcloud_database_type] }}"
+    dbtype: "{{ nextcloud_database_types[nextcloud_database_type] }}"
+  {% endif %}
   app:
     core:
       backgroundjobs_mode: "{{ nextcloud_background_job_mode }}"
 
 nextcloud_occ_command: "php occ"
 nextcloud_container_php_socket_path: /var/run/php
+nextcloud_database_types:
+  postgres: pgsql
+  mysql: mysql
+  mariadb: mysql
+  sqlite: sqlite3
