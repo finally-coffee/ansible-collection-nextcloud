@@ -108,7 +108,8 @@
   notify:
     - reload-systemd
 
-- meta: flush_handlers
+- name: Flush handlers now to ensure systemd can know about the timer before it's enabled
+  meta: flush_handlers
 
 - name: Ensure docker container for nextcloud is running
   docker_container:
