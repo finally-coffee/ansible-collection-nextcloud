@@ -7,6 +7,19 @@
     system: yes
   register: nextcloud_user_info
 
+- name: Map nextcloud socket path if defined
+  set_fact:
+    nextcloud_paths: "{{ nextcloud_paths + [ socket_dir ] }}"
+    nextcloud_container_base_volumes: "{{ nextcloud_container_base_volumes + [ socket_map ] }}"
+  vars:
+    socket_dir:
+      path: "{{ nextcloud_socket_path }}"
+      mode: "0755"
+      owner: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
+      group: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
+    socket_map: "{{ nextcloud_socket_path }}:{{ nextcloud_container_php_socket_path }}:z"
+  when: nextcloud_socket_path is defined and nextcloud_socket_path is string
+
 - name: Ensure nextcloud directories exist and have correct permissions
   file:
     path: "{{ item.path }}"
@@ -37,6 +50,16 @@
   template:
     src: nextcloud-fpm.ini.j2
     dest: "{{ nextcloud_fpm_config_path }}/fpm.ini"
+    mode: "0640"
+    owner: "root"
+    group: "root"
+  notify:
+    - reload-nextcloud
+
+- name: Template PHP FPM docker-specific configuration
+  template:
+    src: nextcloud-fpm-docker.ini.j2
+    dest: "{{ nextcloud_fpm_config_path }}/fpm-docker.ini"
     mode: "0640"
     owner: "root"
     group: "root"

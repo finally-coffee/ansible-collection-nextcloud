@@ -9,6 +9,7 @@ nextcloud_data_path: "{{ nextcloud_basepath }}/data"
 # Where user data like media, documents etc are persisted
 nextcloud_storage_path: "{{ nextcloud_basepath }}/storage"
 nextcloud_fpm_config_path: "{{ nextcloud_basepath }}/fpm-config"
+#nextcloud_socket_path: "{{ nextcloud_basepath }}/socket"
 
 nextcloud_background_job_mode: cron
 
@@ -32,6 +33,7 @@ nextcloud_container_base_volumes:
   - "{{ nextcloud_data_path }}:/var/www/html:z"
   - "{{ nextcloud_fpm_config_path }}/opcache.ini:/usr/local/etc/php/conf.d/opcache-recommended.ini:z"
   - "{{ nextcloud_fpm_config_path }}/fpm.ini:/usr/local/etc/php-fpm.d/www.conf:z"
+  - "{{ nextcloud_fpm_config_path }}/fpm-docker.ini:/usr/local/etc/php-fpm.d/zz-docker.conf:z"
   - "{{ nextcloud_basepath }}/nextcloud-passwd:/etc/passwd:z"
   - "{{ nextcloud_basepath }}/nextcloud-group:/etc/group:z"
 nextcloud_container_extra_volumes: []

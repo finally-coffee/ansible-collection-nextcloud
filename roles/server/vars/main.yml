@@ -26,3 +26,4 @@ nextcloud_container_base_environment_yaml: |+2
   PHP_UPLOAD_LIMIT: "{{ nextcloud_php_upload_limit }}"
 
 nextcloud_occ_command: "php occ"
+nextcloud_container_php_socket_path: /var/run/php

@@ -3,7 +3,14 @@
 user = www-data
 group = www-data
 
-listen = 127.0.0.1:9000
+{% if nextcloud_socket_path is defined and nextcloud_socket_path is string %}
+listen = {{ nextcloud_container_php_socket_path }}/nextcloud.sock
+listen.owner = www-data
+listen.group = www-data
+listen.mode = 0666
+{% else %}
+;listen = 0.0.0.0:9000
+{% endif %}
 
 pm = dynamic
 pm.max_children = {{ nextcloud_fpm_max_children }}
