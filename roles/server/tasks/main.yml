@@ -161,6 +161,7 @@
     user: "{{ nextcloud_user_info.uid }}"
     tty: yes
   register: nextcloud_current_dbhost
+  changed_when: false
 
 - name: Set nextcloud database host mode to {{ nextcloud_database_host }}
   community.docker.docker_container_exec:
