@@ -1,0 +1,30 @@
+---
+
+- name: Ensure {{ key }} is set to {{ value }}
+  block:
+    - name: Check value of {{ key }}
+      community.docker.docker_container_exec:
+        container: "{{ nextcloud_container_name }}"
+        command: "{{ nextcloud_occ_command }} config:{{ type }}:get {{ scope }} {{ entry }}"
+        user: "{{ nextcloud_user_info.uid }}"
+        tty: yes
+      register: nextcloud_current_config_entry
+      changed_when: false
+
+    - name: Set {{ key }} to {{ value }}
+      community.docker.docker_container_exec:
+        container: "{{ nextcloud_container_name }}"
+        command: "{{ nextcloud_occ_command }} config:{{ type }}:set {{ scope }} {{ entry }} --value={{ value }} -n"
+        user: "{{ nextcloud_user_info.uid }}"
+        tty: yes
+      when: nextcloud_current_config_entry.stdout != value
+      notify: restart-nextcloud
+  vars:
+    entry_path: "{{ key.split('.') }}"
+    type: "{{ entry_path | first }}"
+    scope: "{{ entry_path[1] if entry_path | length > 2 else '' }}"
+    entry: >-
+      {{
+         entry_path[1] if entry_path|length == 2 else 
+         (entry_path[2:] | join(" "))
+      }}

@@ -135,40 +135,10 @@
     state: started
   when: nextcloud_background_job_mode == 'cron'
 
-- name: Check nextcloud background job mode
-  community.docker.docker_container_exec:
-    container: "{{ nextcloud_container_name }}"
-    command: "{{ nextcloud_occ_command }} config:app:get core backgroundjobs_mode"
-    user: "{{ nextcloud_user_info.uid }}"
-    tty: yes
-  register: nextcloud_current_backgroundjob_mode
-  # As nextcloud might still be starting, retry this task
-  retries: 5
-  delay: 5
-  changed_when: false
-
-- name: Set nextcloud background job mode to {{ nextcloud_background_job_mode }}
-  community.docker.docker_container_exec:
-    container: "{{ nextcloud_container_name }}"
-    command: "{{ nextcloud_occ_command }} config:app:set core backgroundjobs_mode {{ nextcloud_background_job_mode }}"
-    user: "{{ nextcloud_user_info.uid }}"
-    tty: yes
-  when: nextcloud_current_backgroundjob_mode.stdout != nextcloud_background_job_mode
-
-- name: Check nextcloud database host
-  community.docker.docker_container_exec:
-    container: "{{ nextcloud_container_name }}"
-    command: "{{ nextcloud_occ_command }} config:system:get dbhost"
-    user: "{{ nextcloud_user_info.uid }}"
-    tty: yes
-  register: nextcloud_current_dbhost
-  changed_when: false
-
-- name: Set nextcloud database host mode to {{ nextcloud_database_host }}
-  community.docker.docker_container_exec:
-    container: "{{ nextcloud_container_name }}"
-    command: "{{ nextcloud_occ_command }} config:system:set dbhost --value={{ nextcloud_database_host }} --update-only -n"
-    user: "{{ nextcloud_user_info.uid }}"
-    tty: yes
-  when: nextcloud_current_dbhost.stdout != nextcloud_database_host
-  notify: restart-nextcloud
+- name: Configure nextcloud
+  include_tasks:
+    file: configure-single-setting.yml
+  vars:
+    key: "{{ item.key | replace('[', '.') | replace(']', '.') }}"
+    value: "{{ item.value }}"
+  loop: "{{ lookup('ansible.utils.to_paths', nextcloud_config ) | dict2items }}"
