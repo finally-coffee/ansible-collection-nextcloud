@@ -14,13 +14,23 @@
     - name: Set {{ key }} to {{ value }}
       community.docker.docker_container_exec:
         container: "{{ nextcloud_container_name }}"
-        command: "{{ nextcloud_occ_command }} config:{{ type }}:set {{ scope }} {{ entry }} --value={{ value }} -n"
+        command: "{{ nextcloud_occ_command }} config:{{ type }}:set {{ scope }} {{ entry }} --type={{ value_type }} --value={{ value }} -n"
         user: "{{ nextcloud_user_info.uid }}"
         tty: yes
       when: nextcloud_current_config_entry.stdout != value
       notify: restart-nextcloud
   vars:
     entry_path: "{{ key.split('.') }}"
+    value_type: >-
+      {% if value is boolean %}
+      boolean
+      {% elsif value is integer %}
+      integer
+      {% elsif value is float %}
+      float
+      {% else %}
+      string
+      {% endif %}
     type: "{{ entry_path | first }}"
     scope: "{{ entry_path[1] if entry_path | length > 2 else '' }}"
     entry: >-
