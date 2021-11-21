@@ -48,3 +48,12 @@
   loop: "{{ nextcloud_apps }}"
   notify:
     - restart-nextcloud
+
+- name: Ensure app integrity
+  community.docker.docker_container_exec:
+    container: "{{ nextcloud_container_name }}"
+    command: "php occ integrity:check-app {{ item.name }}"
+    user: "{{ nextcloud_run_user }}"
+    tty: yes
+  when: nextcloud_apps_check_integrity and item.state|default('present') in ['latest', 'present']
+  loop: "{{ nextcloud_apps }}"

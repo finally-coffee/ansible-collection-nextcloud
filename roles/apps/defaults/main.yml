@@ -3,3 +3,5 @@
 nextcloud_container_name: nextcloud
 nextcloud_apps: []
 nextcloud_run_user: nextcloud
+
+nextcloud_apps_check_integrity: false
