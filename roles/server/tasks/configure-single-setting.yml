@@ -1,6 +1,6 @@
 ---
 
-- name: Ensure {{ key }} is set to {{ value }}
+- name: Ensure {{ key }} is set to {{ '***' if ['pass', 'secret', 'key']|select('in', key) else value }}
   block:
     - name: Check value of {{ key }}
       community.docker.docker_container_exec:
@@ -12,7 +12,7 @@
       check_mode: false
       changed_when: false
 
-    - name: Set {{ key }} to {{ value }}
+    - name: Set {{ key }} to {{ '***' if (['pass', 'secret', 'key']|select('in', key)) else value }}
       community.docker.docker_container_exec:
         container: "{{ nextcloud_container_name }}"
         command: "{{ nextcloud_occ_command }} config:{{ type }}:set {{ scope }} {{ entry }} --type={{ value_type }} --value={{ value }} -n"
