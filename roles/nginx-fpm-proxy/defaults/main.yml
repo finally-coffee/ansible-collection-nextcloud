@@ -1,0 +1,23 @@
+---
+
+nextcloud_nginx_version: "1.21.3"
+nextcloud_nginx_basepath: /opt/nextcloud-nginx
+nextcloud_nginx_config: "{{ nextcloud_nginx_basepath }}/nextcloud.conf"
+nextcloud_nginx_servernames: ~
+
+nextcloud_nginx_container_name: nextcloud_nginx
+nextcloud_nginx_container_image: "docker.io/library/nginx"
+nextcloud_nginx_container_image_flavor: "alpine"
+nextcloud_nginx_container_image_ref: "{{ nextcloud_nginx_container_image }}:{{ nextcloud_nginx_version }}{{ '-' + nextcloud_nginx_container_image_flavor if nextcloud_nginx_container_image_flavor else ''}}"
+nextcloud_nginx_container_image_force_pull: false
+nextcloud_nginx_container_extra_volumes: []
+nextcloud_nginx_container_extra_labels: {}
+nextcloud_nginx_container_extra_env: {}
+nextcloud_nginx_container_restart_policy: unless-stopped
+
+nextcloud_nginx_fpm_server_ip: ~
+nextcloud_nginx_fpm_server_port: 9000
+nextcloud_nginx_fpm_socket_dir: ~
+nextcloud_nginx_fpm_socket_path: "{{ nextcloud_nginx_fpm_socket_dir }}/nextcloud.sock"
+nextcloud_nginx_data_path: ~
+nextcloud_nginx_storage_path: ~

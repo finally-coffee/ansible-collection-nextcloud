@@ -1,0 +1,8 @@
+---
+
+- name: Restart nextcloud nginx fpm proxy container
+  listen: restart-nextcloud-nginx
+  docker_container:
+    name: "{{ nextcloud_nginx_container_name }}"
+    state: started
+    restart: yes

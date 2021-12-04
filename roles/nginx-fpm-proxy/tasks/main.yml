@@ -1,0 +1,36 @@
+---
+
+- name: Create directory for nginx config
+  file:
+    path: "{{ nextcloud_nginx_basepath }}"
+    state: directory
+    mode: 0750
+
+- name: Template nginx reverse proxy config for nextcloud
+  template:
+    src: nextcloud-nginx.conf.j2
+    dest: "{{ nextcloud_nginx_config }}"
+  vars:
+    fpm_server: "{{ nextcloud_nginx_fpm_server_ip }}"
+    fpm_server_port: "{{ nextcloud_nginx_fpm_server_port }}"
+    fpm_socket: "{{ nextcloud_nginx_fpm_socket_path }}"
+    domain: "{{ nextcloud_nginx_servernames }}"
+  notify: restart-nextcloud-nginx
+
+- name: Ensure nginx docker image is pulled
+  docker_image:
+    name: "{{ nextcloud_nginx_container_image_ref }}"
+    state: present
+    source: pull
+    force_source: "{{ nextcloud_nginx_container_image_force_pull }}"
+
+- name: Ensure nginx is running for FPM and static file serving
+  docker_container:
+    name: "{{ nextcloud_nginx_container_name }}"
+    image: "{{ nextcloud_nginx_container_image_ref }}"
+    volumes: "{{ nextcloud_nginx_container_volumes }}"
+    labels: "{{ nextcloud_nginx_container_labels }}"
+    env: "{{ nextcloud_nginx_container_env }}"
+    networks: "{{ nextcloud_nginx_container_networks | default(omit) }}"
+    restart_policy: "{{ nextcloud_nginx_container_restart_policy }}"
+    state: started

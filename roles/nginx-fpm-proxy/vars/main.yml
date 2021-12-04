@@ -1,0 +1,18 @@
+---
+
+nextcloud_nginx_container_volumes_base: >-2
+  {{
+    [
+      nextcloud_nginx_config + ':/etc/nginx/conf.d/nextcloud.conf:ro',
+      nextcloud_nginx_data_path + ':/var/www/nextcloud:ro',
+      nextcloud_nginx_storage_path + ':/var/www/nextcloud/data:rw'
+    ]
+    + ([nextcloud_nginx_fpm_socket_dir + ':' + nextcloud_nginx_fpm_socket_dir + ':rw'] if nextcloud_nginx_fpm_socket_dir else [])
+  }}
+nextcloud_nginx_container_labels_base:
+  version: "{{ nextcloud_nginx_version }}"
+nextcloud_nginx_container_env_base: {}
+
+nextcloud_nginx_container_volumes: "{{ nextcloud_nginx_container_volumes_base + nextcloud_nginx_container_extra_volumes }}"
+nextcloud_nginx_container_labels: "{{ nextcloud_nginx_container_labels_base | combine(nextcloud_nginx_container_extra_labels) }}"
+nextcloud_nginx_container_env: "{{ nextcloud_nginx_container_env_base | combine(nextcloud_nginx_container_extra_env) }}"

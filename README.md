@@ -15,6 +15,9 @@ and managing nextcloud installations
   server instance. Can install, remove, enable/disable and update apps.
 - [`roles/ldap-user-backend`](roles/ldap-user-backend/README.md):
   Manages LDAP authentication sources in installed nextcloud instances.
+- [`roles/nginx-fpm-proxy`](roles/nginx-fpm-proxy/README.md):
+  Reverse proxy role which connects to nextcloud using FPM
+  and serves static content.
 
 ## License
 
