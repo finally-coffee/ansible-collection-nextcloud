@@ -1,6 +1,12 @@
 upstream php-handler {
 {% if fpm_socket %}
+{% if fpm_socket is sequence %}
+{% for upstream in fpm_socket %}
+    server unix:{{ upstream }};
+{% endfor %}
+{% else %}
     server unix:{{ fpm_socket }};
+{% endif %}
 {% else %}
     server {{ fpm_server }}:{{ fpm_server_port }};
 {% endif %}
