@@ -4,7 +4,7 @@ user = www-data
 group = www-data
 
 {% if nextcloud_socket_path is defined and nextcloud_socket_path is string %}
-listen = {{ nextcloud_container_php_socket_path }}/nextcloud.sock
+listen = {{ nextcloud_container_php_socket_path }}/{{ nextcloud_container_name }}.sock
 listen.owner = www-data
 listen.group = www-data
 listen.mode = 0666
