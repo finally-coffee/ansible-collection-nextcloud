@@ -46,19 +46,19 @@ nextcloud_container_purge_other_networks: true
 nextcloud_paths:
   - path: "{{ nextcloud_config_path }}"
     mode: "0755"
-    owner: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
-    group: "root"
+    owner: "{{ nextcloud_user_info.uid | default(nextcloud_user) }}"
+    group: root
   - path: "{{ nextcloud_data_path }}"
     mode: "0755"
-    owner: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
-    group: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
+    owner: "{{ nextcloud_user_info.uid | default(nextcloud_user) }}"
+    group: "{{ nextcloud_user_info.group | default(nextcloud_user) }}"
   - path: "{{ nextcloud_fpm_config_path }}"
     mode: "0750"
     owner: root
     group: root
   - path: "{{ nextcloud_storage_path }}"
     mode: "0770"
-    owner: "{{ nextcloud_user_info.uid|default(nextcloud_user) }}"
+    owner: "{{ nextcloud_user_info.uid | default(nextcloud_user) }}"
     group: "root"
 
 # PHP OpCache tuning
