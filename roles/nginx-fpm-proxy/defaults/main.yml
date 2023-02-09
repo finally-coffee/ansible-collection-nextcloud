@@ -1,6 +1,6 @@
 ---
 
-nextcloud_nginx_version: "1.23.2"
+nextcloud_nginx_version: "1.23.3"
 nextcloud_nginx_basepath: /opt/nextcloud-nginx
 nextcloud_nginx_config: "{{ nextcloud_nginx_basepath }}/nextcloud.conf"
 nextcloud_nginx_servernames: ~
