@@ -1,14 +1,14 @@
 ---
 
 - name: Create nextcloud user
-  user:
+  ansible.builtin.user:
     name: "{{ nextcloud_user }}"
     state: present
     system: yes
   register: nextcloud_user_info
 
 - name: Map nextcloud socket path if defined
-  set_fact:
+  ansible.builtin.set_fact:
     nextcloud_paths: "{{ nextcloud_paths + [ socket_dir ] }}"
     nextcloud_container_base_volumes: "{{ nextcloud_container_base_volumes + [ socket_map ] }}"
   vars:
@@ -21,7 +21,7 @@
   when: nextcloud_socket_path is defined and nextcloud_socket_path is string
 
 - name: Ensure nextcloud directories exist and have correct permissions
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
     mode: "{{ item.mode }}"
@@ -30,14 +30,14 @@
   loop: "{{ nextcloud_paths }}"
 
 - name: Ensure docker container for nextcloud is pulled
-  docker_image:
+  community.docker.docker_image:
     name: "{{ nextcloud_container_image_ref }}"
     state: present
     source: pull
     force_source: "{{ nextcloud_container_image_force_source }}"
 
 - name: Template OpCache configuration
-  template:
+  ansible.builtin.template:
     src: nextcloud-fpm-opcache.ini.j2
     dest: "{{ nextcloud_fpm_config_path }}/opcache.ini"
     mode: "0640"
@@ -47,7 +47,7 @@
     - reload-nextcloud
 
 - name: Template PHP FPM configuration
-  template:
+  ansible.builtin.template:
     src: nextcloud-fpm.ini.j2
     dest: "{{ nextcloud_fpm_config_path }}/fpm.ini"
     mode: "0640"
@@ -57,7 +57,7 @@
     - reload-nextcloud
 
 - name: Template PHP FPM docker-specific configuration
-  template:
+  ansible.builtin.template:
     src: nextcloud-fpm-docker.ini.j2
     dest: "{{ nextcloud_fpm_config_path }}/fpm-docker.ini"
     mode: "0640"
@@ -67,7 +67,7 @@
     - reload-nextcloud
 
 - name: Template modified /etc/passwd for nextcloud container
-  template:
+  ansible.builtin.template:
     src: nextcloud-passwd.j2
     dest: "{{ nextcloud_basepath }}/nextcloud-passwd"
     mode: "0640"
@@ -77,7 +77,7 @@
     - reload-nextcloud
 
 - name: Template modified /etc/passwd for nextcloud container
-  template:
+  ansible.builtin.template:
     src: nextcloud-group.j2
     dest: "{{ nextcloud_basepath }}/nextcloud-group"
     mode: "0640"
@@ -87,7 +87,7 @@
     - reload-nextcloud
 
 - name: Template systemd service for nextcloud's cron job
-  template:
+  ansible.builtin.template:
     src: systemd-nextcloud-cron.service.j2
     dest: /etc/systemd/system/nextcloud-cron.service
     mode: "0640"
@@ -98,7 +98,7 @@
     - reload-systemd
 
 - name: Template timer for nextcloud's cron job
-  template:
+  ansible.builtin.template:
     src: systemd-nextcloud-cron.timer.j2
     dest: /etc/systemd/system/nextcloud-cron.timer
     mode: "0640"
@@ -109,10 +109,10 @@
     - reload-systemd
 
 - name: Flush handlers now to ensure systemd can know about the timer before it's enabled
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Ensure docker container for nextcloud is running
-  docker_container:
+  community.docker.docker_container:
     name: "{{ nextcloud_container_name }}"
     image: "{{ nextcloud_container_image_ref }}"
     volumes: "{{ nextcloud_container_volumes }}"
@@ -124,19 +124,19 @@
     state: started
 
 - name: Enable systemd timer for nextcloud cron
-  systemd:
+  ansible.builtin.systemd:
     name: "nextcloud-cron.timer"
     enabled: yes
   when: nextcloud_background_job_mode == 'cron'
 
 - name: Ensure systemd timer for nextcloud cron is started
-  systemd:
+  ansible.builtin.systemd:
     name: "nextcloud-cron.timer"
     state: started
   when: nextcloud_background_job_mode == 'cron'
 
 - name: Configure nextcloud
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: configure-single-setting.yml
   vars:
     key: "{{ item.key | replace('[', '.') | replace(']', '.') }}"
