@@ -1,7 +1,7 @@
 ---
 
 - name: Ensure nextcloud user is created
-  user:
+  ansible.builtin.user:
     name: "{{ nextcloud_run_user }}"
     state: present
   register: nextcloud_user_res
