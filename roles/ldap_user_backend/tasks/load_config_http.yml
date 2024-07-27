@@ -1,7 +1,7 @@
 ---
 
 - name: Set default api parameters for HTTP
-  meta: noop
+  ansible.builtin.meta: noop
   vars: &api_defaults
     http_agent: "{{ nc_ldap_meta_http_agent }}"
     headers: "{{ nc_ldap_api_headers }}"
@@ -11,7 +11,7 @@
     force: yes
 
 - name: Check if configuration with given config ID already exists
-  uri:
+  ansible.builtin.uri:
     <<: *api_defaults
     url: "{{ nc_ldap_api_path }}/{{ nc_ldap_config_id }}{{ query_params }}"
     method: GET
@@ -21,19 +21,19 @@
 
 # TODO: Can we force an ID on POST?
 - name: Create ldap configuration with id={{ nc_ldap_config_id }}
-  uri:
+  ansible.builtin.uri:
     <<: *api_defaults
     url: "{{ nc_ldap_api_path }}"
     method: POST
   when: nc_ldap_existing_config_api.status != 200
 
 - name: Parse output of query command to dict
-  set_fact:
+  ansible.builtin.set_fact:
     nc_ldap_existing_config: "{{ nc_ldap_existing_config_api.stdout | from_json }}"
   changed_when: false
 
 - name: Create changeset
-  set_fact:
+  ansible.builtin.set_fact:
     nc_ldap_config_changeset: "{{ nc_ldap_config_changeset | combine(changed_entry) }}"
   vars:
     changed_entry: "{{ { item : nc_ldap_config_keys[item] } }}"
@@ -41,7 +41,7 @@
   when: nc_ldap_config_keys[item] is defined and nc_ldap_config_keys[item] and nc_ldap_config_keys[item] != nc_ldap_existing_config[nc_ldap_config_id][item]
 
 - name: Ensure ldap configuration is in sync (http)
-  uri:
+  ansible.builtin.uri:
     <<: *api_defaults
     url: "{{ nc_lap_api_path }}/{{ nc_ldap_config_id }}"
     method: PUT
