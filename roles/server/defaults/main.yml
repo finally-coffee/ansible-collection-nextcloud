@@ -1,6 +1,6 @@
 ---
 
-nextcloud_version: 28.0.10
+nextcloud_version: 29.0.7
 nextcloud_user: nextcloud
 nextcloud_basepath: /opt/nextcloud
 nextcloud_config_path: "{{ nextcloud_basepath }}/config"
