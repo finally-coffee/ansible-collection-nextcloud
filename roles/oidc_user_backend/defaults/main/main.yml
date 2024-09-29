@@ -1,0 +1,5 @@
+---
+oidc_user_backend_deployment_method: host
+oidc_user_backend_deployment_become_user: ~
+oidc_user_backend_deployment_method_docker_container_name: nextcloud
+oidc_user_backend_deployment_method_podman_container_name: nextcloud

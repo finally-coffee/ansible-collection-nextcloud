@@ -1,0 +1,41 @@
+---
+- name: Execute OCC command (host)
+  ansible.builtin.command:
+    cmd: "{{ oidc_user_backend_occ_command_to_exec }}"
+  become_user: "{{ oidc_user_backend_occ_user_to_become }}"
+  register: oidc_user_backend_occ_command_result_host
+  when: oidc_user_backend_deployment_method == 'host'
+
+- name: Execute OCC command (docker)
+  community.docker.docker_container_exec:
+    container: >-2
+      {{ oidc_user_backend_deployment_method_docker_container_name }}
+    command: "{{ oidc_user_backend_occ_command_to_exec }}"
+    user: "{{ oidc_user_backend_occ_user_to_become | default(omit, true) }}"
+  register: oidc_user_backend_occ_command_result_docker
+  when: oidc_user_backend_deployment_method == 'docker'
+
+- name: Execute OCC command (podman)
+  containers.podman.podman_container_exec:
+    name: >-2
+      {{ oidc_user_backend_deployment_method_podman_container_name }}
+    command: "{{ oidc_user_backend_occ_command_to_exec }}"
+    user: "{{ oidc_user_backend_occ_user_to_become | default(omit, true) }}"
+  register: oidc_user_backend_occ_command_result_podman
+  when: oidc_user_backend_deployment_method == 'podman'
+
+- name: Register result into variable
+  ansible.builtin.set_fact: {
+    "{{ oidc_user_backend_occ_command_result_var }}" : "{{
+      oidc_user_backend_occ_command_result.stdout | string | from_json
+    }}"
+  }
+  vars:
+    oidc_user_backend_occ_result_map:
+      host: "{{ oidc_user_backend_occ_command_result_host }}"
+      docker: "{{ oidc_user_backend_occ_command_result_docker }}"
+      podman: "{{ oidc_user_backend_occ_command_result_podman }}"
+    oidc_user_backend_occ_command_result: >-2
+      {{ oidc_user_backend_occ_result_map[oidc_user_backend_deployment_method]
+      | default(false, true) }}
+  when: oidc_user_backend_occ_command_result_var | default(false, true)

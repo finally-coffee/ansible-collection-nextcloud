@@ -1,0 +1,52 @@
+---
+- name: Check if deployment method is supported
+  ansible.builtin.fail:
+    msg: >-2
+      Deployment method '{{ oidc_user_backend_deployment_method }}' is not supported!
+      Supported are: {{ oidc_user_backend_deployment_methods | join(', ') }}
+  when: oidc_user_backend_deployment_method not in oidc_user_backend_deployment_methods
+
+- name: Lookup become user info
+  ansible.builtin.user:
+    name: "{{ oidc_user_backend_deployment_become_user }}"
+    state: present
+  check_mode: true
+  register: oidc_user_backend_deployment_become_user_info
+  when: oidc_user_backend_deployment_become_user | default(false, true)
+
+- name: Retrieve configured providers
+  ansible.builtin.include_tasks:
+    file: execute-occ.yml
+  vars:
+    oidc_user_backend_occ_command_to_exec: >-
+      {{ oidc_user_backend_occ_user_oidc_provider_get_command }}
+    oidc_user_backend_occ_user_to_become: "{{ oidc_user_backend_deployment_become_user_info.uid }}"
+    oidc_user_backend_occ_command_result_var: "oidc_user_backend_occ_user_oidc_provider"
+
+- name: Check if provider information should be updated
+  set_fact:
+    oidc_user_backend_backend_force_update: true
+  loop: "{{ lookup('ansible.utils.to_paths', oidc_user_backend_occ_user_oidc_provider) | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  vars:
+    target_config: >-2
+      {{ lookup('ansible.utils.to_paths', oidc_user_backend_occ_user_oidc_config_provider_dict) }}
+  when:
+    - item.key not in oidc_user_backend_occ_user_oidc_provider_ignored_settings
+    - (item.value != None) and (target_config[item.key] != None)
+    - >-2
+        (target_config[item.key] != None) | ternary(
+          (item.value != target_config[item.key]),
+          (item.value | string | length > 0)
+        )
+
+- name: Update configuration for provider '{{ oidc_user_backend_config_provider_identifier }}'
+  ansible.builtin.include_tasks:
+    file: execute-occ.yml
+  vars:
+    oidc_user_backend_occ_command_to_exec: >-
+      {{ oidc_user_backend_occ_user_oidc_provider_set_command }}
+    oidc_user_backend_occ_user_to_become: "{{ oidc_user_backend_deployment_become_user_info.uid }}"
+    oidc_user_backend_occ_command_result_var: ~
+  when: oidc_user_backend_backend_force_update | default(false, true)

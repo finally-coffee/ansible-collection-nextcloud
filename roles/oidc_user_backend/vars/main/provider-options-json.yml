@@ -1,0 +1,43 @@
+---
+# JSON structure of the `occ` response with `--output=json`
+oidc_user_backend_occ_user_oidc_config_provider_dict:
+  identifier: "{{ oidc_user_backend_config_provider_identifier }}"
+  clientId: "{{ oidc_user_backend_config_provider_client_id }}"
+  clientSecret: "{{ oidc_user_backend_config_provider_client_secret }}"
+  discoveryEndpoint: "{{ oidc_user_backend_config_provider_discovery_endpoint }}"
+  endSessionEndpoint: "{{ oidc_user_backend_config_provider_end_session_endpoint }}"
+  scope: "{{ oidc_user_backend_config_provider_scopes | default([], true) | join(' ') }}"
+  settings:
+    uniqueUid: >-2
+      {{ oidc_user_backend_config_provider_settings_unique_uid | bool }}
+    providerBasedId: >-2
+      {{ oidc_user_backend_config_provider_settings_provider_based_id | bool }}
+    checkBearer: >-2
+      {{ oidc_user_backend_config_provider_settings_check_bearer | bool }}
+    sendIdTokenHint: >-2
+      {{ oidc_user_backend_config_provider_settings_send_id_token_hint | bool }}
+    groupProvisioning: >-2
+      {{ oidc_user_backend_config_provider_settings_group_provisioning | bool }}
+    extraClaims: >-2
+      {{ oidc_user_backend_config_provider_settings_extra_claims | default([]) | join(' ') }}
+    mappingDisplayName: "{{ oidc_user_backend_config_provider_settings_mapping_display_name }}"
+    mappingEmail: "{{ oidc_user_backend_config_provider_settings_mapping_email }}"
+    mappingQuota: "{{ oidc_user_backend_config_provider_settings_mapping_quota }}"
+    mappingUid: "{{ oidc_user_backend_config_provider_settings_mapping_uid }}"
+    mappingGroups: "{{ oidc_user_backend_config_provider_settings_mapping_groups }}"
+    mappingWebsite: "{{ oidc_user_backend_config_provider_settings_mapping_website }}"
+    mappingAvatar: "{{ oidc_user_backend_config_provider_settings_mapping_avatar }}"
+    mappingTwitter: "{{ oidc_user_backend_config_provider_settings_mapping_twitter }}"
+    mappingFediverse: "{{ oidc_user_backend_config_provider_settings_mapping_fediverse }}"
+    mappingOrganisation: "{{ oidc_user_backend_config_provider_settings_mapping_organisation }}"
+    mappingRole: "{{ oidc_user_backend_config_provider_settings_mapping_role }}"
+    mappingHeadline: "{{ oidc_user_backend_config_provider_settings_mapping_headline }}"
+    mappingBiography: "{{ oidc_user_backend_config_provider_settings_mapping_biography }}"
+    mappingPhonenumber: "{{ oidc_user_backend_config_provider_settings_mapping_phone }}"
+    mappingGender: "{{ oidc_user_backend_config_provider_settings_mapping_gender }}"
+    mappingAddress: "{{ oidc_user_backend_config_provider_settings_mapping_address }}"
+    mappingStreetaddress: "{{ oidc_user_backend_config_provider_settings_mapping_street_address }}"
+    mappingPostalcode: "{{ oidc_user_backend_config_provider_settings_mapping_postal_code }}"
+    mappingLocality: "{{ oidc_user_backend_config_provider_settings_mapping_locality }}"
+    mappingRegion: "{{ oidc_user_backend_config_provider_settings_mapping_region }}"
+    mappingCountry: "{{ oidc_user_backend_config_provider_settings_mapping_country }}"

@@ -1,0 +1,9 @@
+---
+oidc_user_backend_deployment_methods:
+  - host
+  - docker
+  - podman
+
+oidc_user_backend_occ_user_oidc_provider_ignored_settings:
+  - 'id'
+  - 'settings.bearerProvisioning'

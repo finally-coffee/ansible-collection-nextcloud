@@ -1,0 +1,15 @@
+---
+oidc_user_backend_occ_command: "php occ"
+oidc_user_backend_occ_user_oidc_provider_identifier: >-2
+  {{ oidc_user_backend_config_provider_identifier }}
+oidc_user_backend_force_update: false
+
+oidc_user_backend_occ_user_oidc_provider_set_command: >-2
+  {{ oidc_user_backend_occ_command }} user_oidc:provider
+  {{ oidc_user_backend_occ_user_oidc_provider_options }}
+  {{ oidc_user_backend_occ_user_oidc_provider_identifier }}
+oidc_user_backend_occ_user_oidc_provider_list_command: >-2
+  {{ oidc_user_backend_occ_command }} user_oidc:provider --output=json
+oidc_user_backend_occ_user_oidc_provider_get_command: >-2
+  {{ oidc_user_backend_occ_command }} user_oidc:provider --output=json
+  {{ oidc_user_backend_occ_user_oidc_provider_identifier }}

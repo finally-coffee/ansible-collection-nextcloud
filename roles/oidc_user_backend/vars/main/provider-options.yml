@@ -1,0 +1,54 @@
+---
+# Structure how `occ user_oidc:provider [options] [<identifier>]` expects them
+oidc_user_backend_occ_user_oidc_provider_options_dict:
+  clientid: "{{ oidc_user_backend_config_provider_client_id }}"
+  clientsecret: "{{ oidc_user_backend_config_provider_client_secret }}"
+  discoveryuri: "{{ oidc_user_backend_config_provider_discovery_endpoint }}"
+  endsessionendpointuri: "{{ oidc_user_backend_config_provider_end_session_endpoint }}"
+  scope: "'{{ oidc_user_backend_config_provider_scopes | default([], true) | join(' ') }}'"
+  "unique-uid": >-2
+    {{ oidc_user_backend_config_provider_settings_unique_uid | bool | ternary(1, 0) }}
+  "check-bearer": >-2
+    {{ oidc_user_backend_config_provider_settings_check_bearer | bool | ternary(1, 0) }}
+  "send-id-token-hint": >-2
+    {{ oidc_user_backend_config_provider_settings_send_id_token_hint | bool | ternary(1, 0) }}
+  "group-provisioning": >-2
+    {{ oidc_user_backend_config_provider_settings_group_provisioning | bool | ternary(1, 0) }}
+  "extra-claims": >-2
+    {{ (oidc_user_backend_config_provider_settings_extra_claims | default([]) | length > 0)
+       | ternary(oidc_user_backend_config_provider_settings_extra_claims | join(' ') | quote, '') }}
+
+oidc_user_backend_occ_user_oidc_provider_mapping_options_dict:
+  "display-name": "{{ oidc_user_backend_config_provider_settings_mapping_display_name }}"
+  email: "{{ oidc_user_backend_config_provider_settings_mapping_email }}"
+  quota: "{{ oidc_user_backend_config_provider_settings_mapping_quota }}"
+  uid: "{{ oidc_user_backend_config_provider_settings_mapping_uid }}"
+  groups: "{{ oidc_user_backend_config_provider_settings_mapping_groups }}"
+  website: "{{ oidc_user_backend_config_provider_settings_mapping_website }}"
+  avatar: "{{ oidc_user_backend_config_provider_settings_mapping_avatar }}"
+  twitter: "{{ oidc_user_backend_config_provider_settings_mapping_twitter }}"
+  fediverse: "{{ oidc_user_backend_config_provider_settings_mapping_fediverse }}"
+  organisation: "{{ oidc_user_backend_config_provider_settings_mapping_organisation }}"
+  role: "{{ oidc_user_backend_config_provider_settings_mapping_role }}"
+  headline: "{{ oidc_user_backend_config_provider_settings_mapping_headline }}"
+  biography: "{{ oidc_user_backend_config_provider_settings_mapping_biography }}"
+  phone: "{{ oidc_user_backend_config_provider_settings_mapping_phone }}"
+  gender: "{{ oidc_user_backend_config_provider_settings_mapping_gender }}"
+  address: "{{ oidc_user_backend_config_provider_settings_mapping_address }}"
+  street_address: "{{ oidc_user_backend_config_provider_settings_mapping_street_address }}"
+  postal_code: "{{ oidc_user_backend_config_provider_settings_mapping_postal_code }}"
+  locality: "{{ oidc_user_backend_config_provider_settings_mapping_locality }}"
+  region: "{{ oidc_user_backend_config_provider_settings_mapping_region }}"
+  country: "{{ oidc_user_backend_config_provider_settings_mapping_country }}"
+
+oidc_user_backend_occ_user_oidc_provider_options: >-2
+  {% for tuple in oidc_user_backend_occ_user_oidc_provider_options_dict | dict2items %}
+  {% if tuple.value | default(false, true) %}
+  --{{ tuple.key }}={{ tuple.value }}
+  {% endif %}
+  {% endfor %}
+  {% for tuple in oidc_user_backend_occ_user_oidc_provider_mapping_options_dict | dict2items %}
+  {% if tuple.value | default(false, true) %}
+  --mapping-{{ tuple.key }}={{ tuple.value }}
+  {% endif %}
+  {% endfor %}
