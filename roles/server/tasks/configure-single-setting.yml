@@ -9,6 +9,9 @@
         user: "{{ nextcloud_user_info.uid }}"
         tty: yes
       register: nextcloud_current_config_entry
+      until: nextcloud_current_config_entry is success
+      retries: 30
+      delay: 10
       check_mode: false
       changed_when: false
 
