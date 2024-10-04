@@ -20,9 +20,20 @@ nextcloud_database_pass: ~
 nextcloud_database_host: localhost
 
 nextcloud_container_name: nextcloud
-nextcloud_container_image: docker.io/library/nextcloud
+nextcloud_container_image_server: docker.io
+nextcloud_container_image_namespace: library
+nextcloud_container_image_name: nextcloud
+nextcloud_container_image: >-2
+  {{
+    [
+      nextcloud_container_image_server,
+      nextcloud_container_image_namespace,
+      nextcloud_container_image_name,
+    ] | join('/')
+  }}
 nextcloud_container_image_variant: "-fpm-alpine"
-nextcloud_container_image_ref: "{{ nextcloud_container_name }}:{{ nextcloud_version }}{{ nextcloud_container_image_variant }}"
+nextcloud_container_image_ref: >-2
+  {{ nextcloud_container_image }}:{{ nextcloud_version }}{{ nextcloud_container_image_variant }}
 nextcloud_container_image_force_source: false
 nextcloud_container_restart_policy: "unless-stopped"
 

@@ -29,7 +29,7 @@
     group: "{{ item.group }}"
   loop: "{{ nextcloud_paths }}"
 
-- name: Ensure docker container for nextcloud is pulled
+- name: Ensure docker container image '{{ nextcloud_container_image_ref }}' for nextcloud is pulled
   community.docker.docker_image:
     name: "{{ nextcloud_container_image_ref }}"
     state: present
