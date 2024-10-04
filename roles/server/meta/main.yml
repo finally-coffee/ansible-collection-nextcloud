@@ -1,0 +1,10 @@
+---
+allow_duplicates: true
+dependencies: []
+galaxy_info:
+  role_name: server
+  description: Deploy nextcloud server, the self-hosted nextcloud
+  galaxy_tags:
+    - nextcloud
+    - owncloud
+    - docker
