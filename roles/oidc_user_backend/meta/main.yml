@@ -2,11 +2,11 @@
 allow_duplicates: true
 dependencies: []
 galaxy_info:
-  role_name: ldap_user_backend
-  description: Configure a nextcloud ldap user backend using ansible
+  role_name: oidc_user_backend
+  description: Configure a nextcloud oidc user backend using ansible
   galaxy_tags:
     - nextcloud
     - owncloud
-    - ldap
+    - oidc
     - authentication
     - docker

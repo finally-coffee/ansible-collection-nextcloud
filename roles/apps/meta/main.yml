@@ -1,0 +1,12 @@
+---
+allow_duplicates: true
+dependencies: []
+galaxy_info:
+  role_name: apps
+  description: Install Nextcloud apps using ansible
+  galaxy_tags:
+    - nextcloud
+    - owncloud
+    - apps
+    - nextcloud-apps
+    - docker

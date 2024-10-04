@@ -1,0 +1,12 @@
+---
+allow_duplicates: true
+dependencies: []
+galaxy_info:
+  role_name: nginx_fpm_proxy
+  description: Configure nginx as a FPM proxy for nextcloud
+  galaxy_tags:
+    - nextcloud
+    - owncloud
+    - nginx
+    - fpm
+    - docker
