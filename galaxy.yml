@@ -12,3 +12,7 @@ build_ignore:
 - '*.tar.gz'
 repository: https://git.finally.coffee/finallycoffee/nextcloud
 issues: https://codeberg.org/finallycoffee/ansible-collection-nextcloud/issues
+tags:
+  - nextcloud
+  - nextcloud-apps
+  - docker
