@@ -29,9 +29,9 @@
     env: "{{ nextcloud_nginx_container_env }}"
     name: "{{ nextcloud_nginx_container_name }}"
     image: "{{ nextcloud_nginx_container_image_ref }}"
-    ports: "{{ nextcloud_nginx_container_ports }}"
+    ports: "{{ nextcloud_nginx_container_ports  | default(omit, true) }}"
     volumes: "{{ nextcloud_nginx_container_volumes }}"
-    labels: "{{ nextcloud_nginx_container_labels }}"
-    networks: "{{ nextcloud_nginx_container_networks | default(omit) }}"
+    labels: "{{ nextcloud_nginx_container_labels | default(omit, true) }}"
+    networks: "{{ nextcloud_nginx_container_networks | default(omit, true) }}"
     restart_policy: "{{ nextcloud_nginx_container_restart_policy }}"
     state: started
