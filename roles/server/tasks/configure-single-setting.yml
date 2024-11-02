@@ -28,9 +28,9 @@
     value_type: >-
       {% if value is boolean %}
       boolean
-      {% elsif value is integer %}
+      {% elif value is integer %}
       integer
-      {% elsif value is float %}
+      {% elif value is float %}
       float
       {% else %}
       string
