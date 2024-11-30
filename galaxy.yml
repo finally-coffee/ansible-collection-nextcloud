@@ -1,6 +1,6 @@
 namespace: finallycoffee
 name: nextcloud
-version: 0.7.1
+version: 0.7.2
 readme: README.md
 authors:
 - transcaffeine <transcaffeine@finally.coffee>
@@ -14,5 +14,5 @@ repository: https://git.finally.coffee/finallycoffee/nextcloud
 issues: https://codeberg.org/finallycoffee/ansible-collection-nextcloud/issues
 tags:
   - nextcloud
-  - nextcloud-apps
+  - nextcloud_apps
   - docker
