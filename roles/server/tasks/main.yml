@@ -120,7 +120,6 @@
     env: "{{ nextcloud_container_env }}"
     etc_hosts: "{{ nextcloud_container_etc_hosts | default(omit, true) }}"
     networks: "{{ nextcloud_container_networks | default(omit, true) }}"
-    purge_networks: "{{ nextcloud_container_purge_other_networks }}"
     restart_policy: "{{ nextcloud_container_restart_policy }}"
     state: started
 

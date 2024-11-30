@@ -52,7 +52,6 @@ nextcloud_container_extra_labels: {}
 nextcloud_container_extra_environment: {}
 
 nextcloud_container_networks: ~
-nextcloud_container_purge_other_networks: true
 
 nextcloud_paths:
   - path: "{{ nextcloud_config_path }}"
