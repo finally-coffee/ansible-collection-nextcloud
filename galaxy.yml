@@ -1,12 +1,12 @@
 namespace: finallycoffee
 name: nextcloud
-version: "0.7.3"
+version: "0.8.0"
 readme: README.md
 authors:
 - transcaffeine <transcaffeine@finally.coffee>
 description: Installing and configuring nextcloud (and related apps/services) using docker
 dependencies:
-  "community.docker": "^3.0.0"
+  "community.docker": "^4.0.0"
 license_file: LICENSE.md
 build_ignore:
 - '*.tar.gz'
