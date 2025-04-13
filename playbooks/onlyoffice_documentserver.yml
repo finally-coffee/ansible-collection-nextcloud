@@ -1,0 +1,6 @@
+---
+- name: Deploy onlyoffice documentserver
+  hosts: "{{ onlyoffice_documentserver_hosts | default('onlyoffice_documentserver') }}"
+  become: "{{ onlyoffice_documentserver_become | default(false, true) }}"
+  roles:
+    - role: finallycoffee.nextcloud.onlyoffice_documentserver

@@ -1,0 +1,44 @@
+---
+onlyoffice_documentserver_container_name: "onlyoffice-documentserver"
+onlyoffice_documentserver_container_image: >-2
+  {{
+    [
+      onlyoffice_documentserver_container_image_repository,
+      onlyoffice_documentserver_container_image_tag
+        | default(onlyoffice_documentserver_version, true)
+    ] | join(':')
+  }}
+onlyoffice_documentserver_container_image_registry: docker.io
+onlyoffice_documentserver_container_image_namespace: "onlyoffice"
+onlyoffice_documentserver_container_image_name: "documentserver"
+onlyoffice_documentserver_container_image_repository: >-2
+  {{ onlyoffice_documentserver_container_image_registry
+  + (('/' + onlyoffice_documentserver_container_image_namespace)
+      if onlyoffice_documentserver_container_image_namespace else '')
+  + '/' + onlyoffice_documentserver_container_image_name }}
+onlyoffice_documentserver_container_image_tag: ~
+onlyoffice_documentserver_container_image_source: pull
+onlyoffice_documentserver_container_image_force_source: >-2
+  {{ onlyoffice_documentserver_container_image_tag | default(false, true) }}
+onlyoffice_documentserver_container_env: {}
+onlyoffice_documentserver_container_ports: ~
+onlyoffice_documentserver_container_labels: ~
+onlyoffice_documentserver_container_ulimits: ~
+onlyoffice_documentserver_container_networks: ~
+onlyoffice_documentserver_container_dns_servers: ~
+onlyoffice_documentserver_container_etc_hosts: ~
+onlyoffice_documentserver_container_memory: ~
+onlyoffice_documentserver_container_memory_reservation: ~
+onlyoffice_documentserver_container_memory_swap: ~
+
+onlyoffice_documentserver_container_state: >-2
+  {{ (onlyoffice_documentserver_state == 'present')
+    | ternary('started', 'absent') }}
+onlyoffice_documentserver_container_restart_policy: "on-failure"
+
+onlyoffice_documentserver_default_volumes:
+  - "/var/log/onlyoffice:/var/log/onlyoffice:rw"
+onlyoffice_documentserver_volumes: ~
+onlyoffice_documentserver_all_volumes: >-2
+  {{ onlyoffice_documentserver_default_volumes | default([], true)
+     + onlyoffice_documentserver_volumes | default([], true) }}

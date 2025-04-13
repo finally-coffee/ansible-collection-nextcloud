@@ -1,0 +1,6 @@
+---
+onlyoffice_documentserver_states:
+  - present
+  - absent
+onlyoffice_documentserver_deployment_methods:
+  - docker
