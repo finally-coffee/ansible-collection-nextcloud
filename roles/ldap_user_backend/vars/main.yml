@@ -12,9 +12,12 @@ nc_ldap_config_keys:
   ldapBackupHost: "{{ nc_ldap_config_backup_host }}"
   ldapBackupPort: "{{ nc_ldap_config_backup_port }}"
   ldapOverrideMainServer: "{{ nc_ldap_config_override_main_server }}"
-  ldapBase: "{{ nc_ldap_config_base_dn }}"
-  ldapBaseUsers: "{{ nc_ldap_config_base_dn_users }}"
-  ldapBaseGroups: "{{ nc_ldap_config_base_dn_groups }}"
+  ldapBase:
+    - "{{ nc_ldap_config_base_dn }}"
+  ldapBaseUsers:
+    - "{{ nc_ldap_config_base_dn_users }}"
+  ldapBaseGroups:
+    - "{{ nc_ldap_config_base_dn_groups }}"
   ldapAgentName: "{{ nc_ldap_config_agent_name }}"
   ldapAgentPassword: "{{ nc_ldap_config_agent_password }}"
   ldapTLS: "{{ nc_ldap_config_tls }}"
@@ -30,8 +33,10 @@ nc_ldap_config_keys:
   ldapAttributesForUserSearch: "{{ nc_ldap_config_attributes_for_user_search }}"
   ldapGroupFilter: "{{ nc_ldap_config_group_filter }}"
   ldapGroupFilterMode: "{{ nc_ldap_config_group_filter_mode }}"
-  ldapGroupFilterObjectclass: "{{ nc_ldap_config_group_filter_objectclass }}"
-  ldapGroupFilterGroups: "{{ nc_ldap_config_group_filter_groups }}"
+  ldapGroupFilterObjectclass:
+    - "{{ nc_ldap_config_group_filter_objectclass }}"
+  ldapGroupFilterGroups:
+    - "{{ nc_ldap_config_group_filter_groups }}"
   ldapGroupMemberAssocAttr: "{{ nc_ldap_config_group_member_assoc_attr }}"
   ldapGroupDisplayName: "{{ nc_ldap_config_group_displayname }}"
   ldapAttributesForGroupSearch: "{{ nc_ldap_config_attributes_for_group_search }}"
