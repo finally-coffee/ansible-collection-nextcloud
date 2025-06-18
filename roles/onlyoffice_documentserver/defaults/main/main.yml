@@ -1,6 +1,6 @@
 ---
 onlyoffice_documentserver_user: "onlyoffice"
-onlyoffice_documentserver_version: "8.3.3"
+onlyoffice_documentserver_version: "9.0.0"
 
 onlyoffice_documentserver_state: present
 onlyoffice_documentserver_deployment_method: docker
