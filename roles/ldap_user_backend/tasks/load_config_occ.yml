@@ -29,7 +29,7 @@
   vars:
     changed_entry: "{{ { item : nc_ldap_config_keys[item] } }}"
   loop: "{{ nc_ldap_config_keys.keys() }}"
-  when: nc_ldap_config_keys[item] is defined and nc_ldap_config_keys[item] and nc_ldap_config_keys[item] != nc_ldap_existing_config[nc_ldap_config_id][item]
+  when: ((nc_ldap_config_keys[item] is defined) and nc_ldap_config_keys[item] and (nc_ldap_config_keys[item] != nc_ldap_existing_config[nc_ldap_config_id][item])) | bool
 
 - name: Ensure ldap configuration is in sync
   community.docker.docker_container_exec:
