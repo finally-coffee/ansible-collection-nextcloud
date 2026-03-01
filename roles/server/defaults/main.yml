@@ -1,5 +1,10 @@
 ---
-nextcloud_version: "32.0.6"
+nextcloud_major_version: 33
+nextcloud_versions:
+  31: "31.0.14"
+  32: "32.0.6"
+  33: "33.0.0"
+nextcloud_version: "{{ nextcloud_versions[nextcloud_major_version] }}"
 nextcloud_user: nextcloud
 nextcloud_basepath: /opt/nextcloud
 nextcloud_config_path: "{{ nextcloud_basepath }}/config"
