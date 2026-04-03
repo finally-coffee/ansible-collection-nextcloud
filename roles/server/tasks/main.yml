@@ -122,6 +122,7 @@
     networks: "{{ nextcloud_container_networks | default(omit, true) }}"
     restart_policy: "{{ nextcloud_container_restart_policy }}"
     state: started
+  register: nextcloud_container_info
 
 - name: Enable systemd timer for nextcloud cron
   ansible.builtin.systemd:
@@ -142,3 +143,19 @@
     key: "{{ item.key | replace('[', '.') | replace(']', '.') }}"
     value: "{{ item.value }}"
   loop: "{{ lookup('ansible.utils.to_paths', nextcloud_config ) | dict2items }}"
+
+- name: Ensure missing database schema migrations are run
+  community.docker.docker_container_exec:
+    container: "{{ nextcloud_container_name }}"
+    command: "php occ {{ occ_task }}"
+    user: "{{ nextcloud_user_info.uid | default(nextcloud_user) }}"
+  register: nextcloud_container_db_migration_info
+  changed_when: >-2
+    nextcloud_container_db_migration_info is success
+    and nextcloud_container_db_migration_info.stdout | trim not in ['', 'Done.']
+  loop:
+    - "db:add-missing-indices"
+    - "db:add-missing-primary-keys"
+    - "db:add-missing-columns"
+  loop_control:
+    loop_var: "occ_task"
