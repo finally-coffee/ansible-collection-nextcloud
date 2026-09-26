@@ -5,6 +5,7 @@ nextcloud_versions:
   32: "32.0.15"
   33: "33.0.9"
   34: "34.0.4"
+  35: "35.0.1"
 nextcloud_version: "{{ nextcloud_versions[nextcloud_major_version] }}"
 nextcloud_user: nextcloud
 nextcloud_basepath: /opt/nextcloud
